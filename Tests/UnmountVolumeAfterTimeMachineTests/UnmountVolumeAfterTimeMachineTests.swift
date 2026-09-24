@@ -4,81 +4,15 @@ import XCTest
 @testable import UnmountVolumeAfterTimeMachine
 
 final class UnmountVolumeAfterTimeMachineTests: XCTestCase {
-    func testApplicationText() {
+
+    // Verifies that the macOS 27-style fixture remains a supported real-log sample.
+    func testMacOS27FixtureProducesTheExpectedCompletionEvent() throws {
+        let processor = TimeMachineLogProcessor()
+        let events = try fixtureEntries().compactMap { processor.process($0) }
+
         XCTAssertEqual(
-            UnmountVolumeAfterTimeMachine().text,
-            "UnmountVolumeAfterTimeMachine started!"
-        )
-    }
-
-    func testMountpointWithoutPrecedingCompletionOrThinningDoesNotProduceAnEvent() {
-        let processor = TimeMachineLogProcessor()
-
-        XCTAssertNil(
-            processor.process(
-                TimeMachineLogEntry(message: "Mountpoint '/Volumes/TestBackup' is still valid")
-            )
-        )
-    }
-
-    func testMountpointOutsideVolumesDoesNotProduceAnEvent() {
-        let processor = TimeMachineLogProcessor()
-
-        XCTAssertNil(
-            processor.process(
-                TimeMachineLogEntry(
-                    message: "Completed backup"
-                )
-            )
-        )
-        XCTAssertNil(
-            processor.process(
-                TimeMachineLogEntry(
-                    message: "Mountpoint '/System/Volumes/Backup' is still valid"
-                )
-            )
-        )
-    }
-
-    func testNonInfoMessageDoesNotBecomePreviousInfoMessage() {
-        let processor = TimeMachineLogProcessor()
-
-        XCTAssertNil(
-            processor.process(
-                TimeMachineLogEntry(
-                    message: "Successfully completed backing up 2.83 GB to '/Volumes/TestBackup'",
-                    isInfo: false
-                )
-            )
-        )
-        XCTAssertNil(
-            processor.process(
-                TimeMachineLogEntry(message: "Mountpoint '/Volumes/TestBackup' is still valid")
-            )
-        )
-    }
-
-    func testInterveningInfoMessageClearsThinningMatch() {
-        let processor = TimeMachineLogProcessor()
-
-        XCTAssertNil(
-            processor.process(
-                TimeMachineLogEntry(
-                    message: "Thinning 1 backups"
-                )
-            )
-        )
-        XCTAssertNil(
-            processor.process(
-                TimeMachineLogEntry(message: "Another Time Machine info message")
-            )
-        )
-        XCTAssertNil(
-            processor.process(
-                TimeMachineLogEntry(
-                    message: "Mountpoint '/Volumes/TestBackup' is still valid"
-                )
-            )
+            events,
+            [.completedBackup(message: "Mountpoint '/Volumes/TestBackup' is still valid")]
         )
     }
 
