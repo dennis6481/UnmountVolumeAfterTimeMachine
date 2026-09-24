@@ -35,6 +35,13 @@ final class TimeMachineNotificationListener {
       name: TimeMachineLogReader.completedBackupNotification,
       object: logReader
     )
+
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(unmountVolume),
+      name: TimeMachineLogReader.completedBackupWithoutThinningNotification,
+      object: logReader
+    )
   }
 
   deinit {
@@ -47,6 +54,12 @@ final class TimeMachineNotificationListener {
     NotificationCenter.default.removeObserver(
       self,
       name: TimeMachineLogReader.completedBackupNotification,
+      object: logReader
+    )
+
+    NotificationCenter.default.removeObserver(
+      self,
+      name: TimeMachineLogReader.completedBackupWithoutThinningNotification,
       object: logReader
     )
   }

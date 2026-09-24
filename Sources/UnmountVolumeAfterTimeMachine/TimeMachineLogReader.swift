@@ -15,6 +15,10 @@ final class TimeMachineLogReader {
         "ie.brianhenryie.timemachinelog.afterthinning"
     )
 
+    static let completedBackupWithoutThinningNotification = Notification.Name(
+        "ie.brianhenryie.timemachinelog.aftercompletedbackupnothinning"
+    )
+
     private let queue = DispatchQueue(
         label: "UnmountVolumeAfterTimeMachine.timeMachineLogReader"
     )
@@ -116,6 +120,11 @@ final class TimeMachineLogReader {
             post(notification: Self.completedBackupNotification, message: message)
         case let .thinning(message):
             post(notification: Self.thinningNotification, message: message)
+        case let .completedBackupWithoutThinning(message):
+            post(
+                notification: Self.completedBackupWithoutThinningNotification,
+                message: message
+            )
         }
     }
 

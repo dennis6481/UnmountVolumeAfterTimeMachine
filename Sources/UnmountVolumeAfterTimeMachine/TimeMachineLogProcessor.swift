@@ -19,6 +19,7 @@ struct TimeMachineLogEntry {
 enum TimeMachineLogEvent: Equatable {
     case completedBackup(message: String)
     case thinning(message: String)
+    case completedBackupWithoutThinning(message: String)
 }
 
 final class TimeMachineLogProcessor {
@@ -46,6 +47,8 @@ final class TimeMachineLogProcessor {
             event = .completedBackup(message: message)
         } else if thinningDetected {
             event = .thinning(message: message)
+        } else if message.starts(with: "Mountpoint") && thinningDetected {
+            event = .completedBackupWithoutThinning(message: message)
         } else {
             event = nil
         }
