@@ -3,8 +3,6 @@
 //
 // Modified by Rui Ma on 24 Sep. 2026.
 //
-// TODO: It always starts with "Could not parse line:"
-//
 
 import Foundation
 import OSLog
