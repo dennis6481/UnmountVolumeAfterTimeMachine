@@ -1,0 +1,51 @@
+2026-09-24 15:07:37 +0000
+process: backupd
+subsystem: com.apple.TimeMachine
+category: BackupEngine
+message: Successfully completed backing up 2.83 GB to '/Volumes/TestBackup/.timemachine/00000000-0000-0000-0000-000000000000/2026-09-24-170531.backup/2026-09-24-170531.backup'
+
+2026-09-24 15:07:38 +0000
+process: backupd
+subsystem: com.apple.TimeMachine
+category: MountPointValidity
+message: Mountpoint '/Volumes/TestBackup' is still valid
+
+2026-09-24 15:07:38 +0000
+process: backupd
+subsystem: com.apple.TimeMachine
+category: BackupThinning
+message: Thinning 1 backups using done thinning:(
+    "2026-09-23-234754"
+)
+
+2026-09-24 15:07:38 +0000
+process: backupd
+subsystem: com.apple.TimeMachine
+category: BackupThinning
+message: Estimated free space: 716.7 GB, actual free space: 716.69 GB, minimum free space: 100 GB
+
+2026-09-24 15:07:39 +0000
+process: backupd
+subsystem: com.apple.TimeMachine
+category: MountPointValidity
+message: Mountpoint '/Volumes/TestBackup' is still valid
+
+2026-09-24 14:47:20 +0000
+process: backupd
+subsystem: com.apple.TimeMachine
+category: BackupDestination
+message: Failed to find any mounted disk matching volume UUIDs: {
+    "00000000-0000-0000-0000-000000000000"
+}
+
+2026-09-24 14:47:20 +0000
+process: backupd
+subsystem: com.apple.TimeMachine
+category: BackupDispatching
+message: Backup failed: BACKUP_FAILED_TARGETVOL_NOT_FOUND (18)
+
+2026-09-24 14:47:20 +0000
+process: backupd
+subsystem: com.apple.TimeMachine
+category: General
+message: A message unrelated to backup completion

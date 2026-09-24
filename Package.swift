@@ -44,6 +44,9 @@ let package = Package(
             ]),
         .testTarget(
             name: "UnmountVolumeAfterTimeMachineTests",
-            dependencies: ["UnmountVolumeAfterTimeMachine"]),
+            dependencies: ["UnmountVolumeAfterTimeMachine"],
+            resources: [
+                .copy("Fixtures")
+            ]),
     ]
 )
