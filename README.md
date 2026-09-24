@@ -24,7 +24,11 @@ mint uninstall BrianHenryIE/UnmountVolumeAfterTimeMachine
 
 Originally requested as a feature for [nielsmouthaan/ejectify-macos](https://github.com/nielsmouthaan/ejectify-macos/issues/19) but not implemented in that now-archived project.
 
-Uses [BrianHenryIE/SwiftTimeMachine](https://github.com/BrianHenryIE/SwiftTimeMachine) and [BrianHenryIE/BHSwiftOSLogStream](https://github.com/BrianHenryIE/BHSwiftOSLogStream) to parse Time Machine logs and query `tmutil` for status. When the backup job completes, the disk is ejected with `DADiskUnmount`.
+Uses Apple `OSLogStore` to parse Time Machine logs and [BrianHenryIE/SwiftTimeMachine](https://github.com/BrianHenryIE/SwiftTimeMachine) to query `tmutil` for status. When the backup job completes, the disk is ejected with `DADiskUnmount`.
+
+Known issues:
+* Thinning detection checks only the immediately preceding info log entry when a mountpoint validity message arrives. If another info entry appears between the thinning message and the mountpoint message, the thinning event may be missed.
+* A single backup may produce both completed-backup and thinning notifications, causing the listener to schedule more than one unmount attempt. 
 
 TODO:
 * ~~App should [run when disk plugged](https://apple.stackexchange.com/a/13724/299117) in / Time Machine starts and quit when the disk is ejected~~ [emorydunn/LaunchAgent](https://github.com/emorydunn/LaunchAgent)

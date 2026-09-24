@@ -2,3 +2,17 @@
 .DS_Store
 .idea
 scratch
+
+MenuBarApp
+.vscode
+
+*.code-workspace
+# Xcode user-specific data
+xcuserdata/
+*.xcuserstate
+
+# Xcode-generated workspace for Swift Package
+.swiftpm/xcode/package.xcworkspace/
+logstream.txt
+OSLog.txt
+.swiftpm/

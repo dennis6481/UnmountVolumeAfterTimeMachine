@@ -1,62 +1,70 @@
 //
 // Created by Brian Henry on 6/9/23.
 //
+// Modified by Rui Ma on 24 Sep. 2026.
+//
 // TODO: It always starts with "Could not parse line:"
 //
 
-import BHSwiftOSLogStream
 import Foundation
 import OSLog
 import SwiftTimeMachine
 
-class TimeMachineNotificationListener {
+final class TimeMachineNotificationListener {
 
+  private let logReader: TimeMachineLogReader
   let unmounter: Unmounter
 
-  init(unmounter: Unmounter = Unmounter()) {
-
+  init(
+    logReader: TimeMachineLogReader = TimeMachineLogReader(),
+    unmounter: Unmounter = Unmounter()
+  ) {
+    self.logReader = logReader
     self.unmounter = unmounter
 
-    TimeMachineLog.shared.addObserver(
+    NotificationCenter.default.addObserver(
       self,
       selector: #selector(unmountVolume),
-      name: Notification.Name.TimeMachineLogAfterThinning,
-      object: nil
+      name: TimeMachineLogReader.thinningNotification,
+      object: logReader
     )
 
-    TimeMachineLog.shared.addObserver(
+    NotificationCenter.default.addObserver(
       self,
       selector: #selector(unmountVolume),
-      name: Notification.Name.TimeMachineLogAfterCompletedBackup,
-      object: nil
+      name: TimeMachineLogReader.completedBackupNotification,
+      object: logReader
+    )
+  }
+
+  deinit {
+    NotificationCenter.default.removeObserver(
+      self,
+      name: TimeMachineLogReader.thinningNotification,
+      object: logReader
     )
 
-    TimeMachineLog.shared.addObserver(
+    NotificationCenter.default.removeObserver(
       self,
-      selector: #selector(unmountVolume),
-      name: Notification.Name.TimeMachineLogAfterCompletedBackupNoThinning,
-      object: nil
+      name: TimeMachineLogReader.completedBackupNotification,
+      object: logReader
     )
   }
 
   @objc func unmountVolume(notification: Notification) {
-
-    guard let timeMachineLog = notification.object as? TimeMachineLog else {
+    guard notification.object as? TimeMachineLogReader != nil else {
       return
     }
 
-    os_log("new TimeMachine notification received")
+    os_log("new Time Machine notification received")
 
-    guard let newLog: LogEntry = timeMachineLog.previousInfoLogs.get() else {
-      return
+    if let message = notification.userInfo?["message"] as? String {
+      os_log("TimeMachine notification message: %{public}@", message)
     }
-
-    os_log("TimeMachine notification message: %public%@", newLog.message)
 
     os_log("Pausing 10 seconds")
 
     DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-
       let tmUtil = TmUtil()
 
       if tmUtil.status()?.running != false {
